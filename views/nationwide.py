@@ -19,55 +19,136 @@ from pathlib import Path
 CHART_DIR = "reports/charts"
 os.makedirs(CHART_DIR, exist_ok=True)
 
-def build_national_report_figures(df, age_data, top15_states):
-    # Daily Trend
+
+import matplotlib.pyplot as plt
+
+def build_national_report_figures_matplotlib(df, age_data, top15_states, output_dir):
+    os.makedirs(output_dir, exist_ok=True)
+
+    # -------------------------
+    # 1. Daily Trend
+    # -------------------------
     daily = (
         df.groupby('date')
-        .agg(
-            total_enrolments=('total_daily_enrolement', 'sum'),
-            reporting_districts=('district', 'nunique')
-        )
+        .agg(total_enrolments=('total_daily_enrolement', 'sum'))
         .reset_index()
     )
 
-    fig_trend = go.Figure()
-    fig_trend.add_trace(go.Scatter(
-        x=daily['date'],
-        y=daily['total_enrolments'],
-        mode='lines',
-        name='Total Enrolments'
-    ))
+    plt.figure(figsize=(10, 4))
+    plt.plot(daily['date'], daily['total_enrolments'], linewidth=2)
+    plt.title("Daily Aadhaar Enrolments")
+    plt.xlabel("Date")
+    plt.ylabel("Total Enrolments")
+    plt.tight_layout()
+    plt.savefig(f"{output_dir}/daily_trend.png")
+    plt.close()
 
-    # Weekday Pattern
+    # -------------------------
+    # 2. Weekday Pattern
+    # -------------------------
     weekday = (
         df.groupby('day_name')['total_daily_enrolement']
         .sum()
-        .reset_index()
+        .reindex(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'])
     )
 
-    fig_weekday = px.bar(
-        weekday,
-        x='day_name',
-        y='total_daily_enrolement'
-    )
+    plt.figure(figsize=(8, 4))
+    weekday.plot(kind='bar')
+    plt.title("Total Aadhaar Enrolments by Day of Week")
+    plt.xlabel("Day")
+    plt.ylabel("Total Enrolments")
+    plt.tight_layout()
+    plt.savefig(f"{output_dir}/weekday_pattern.png")
+    plt.close()
 
-    # Age Composition
-    fig_age = px.pie(
-        age_data,
-        values="Share (%)",
-        names="Age Group",
-        hole=0.4
+    # -------------------------
+    # 3. Age Composition
+    # -------------------------
+    plt.figure(figsize=(6, 6))
+    plt.pie(
+        age_data["Share (%)"],
+        labels=age_data["Age Group"],
+        autopct='%1.1f%%',
+        startangle=90
     )
+    plt.title("Aadhaar Enrolment by Age Group")
+    plt.tight_layout()
+    plt.savefig(f"{output_dir}/age_distribution.png")
+    plt.close()
 
-    # Top States
-    fig_top = px.bar(
-        top15_states.sort_values('avg_enrolments_per_reported_day'),
-        x='avg_enrolments_per_reported_day',
-        y='state',
-        orientation='h'
+    # -------------------------
+    # 4. Top States
+    # -------------------------
+    top_states = top15_states.sort_values('avg_enrolments_per_reported_day')
+
+    plt.figure(figsize=(8, 6))
+    plt.barh(
+        top_states['state'],
+        top_states['avg_enrolments_per_reported_day']
     )
+    plt.title("Top States by Avg Enrolments per Reported Day")
+    plt.xlabel("Avg Enrolments")
+    plt.tight_layout()
+    plt.savefig(f"{output_dir}/top_states.png")
+    plt.close()
 
-    return fig_trend, fig_weekday, fig_age, fig_top
+    return [
+        ("Daily Enrolment Trend", f"{output_dir}/daily_trend.png"),
+        ("Weekly Pattern", f"{output_dir}/weekday_pattern.png"),
+        ("Age Composition", f"{output_dir}/age_distribution.png"),
+        ("Top Performing States", f"{output_dir}/top_states.png"),
+    ]
+
+
+# def build_national_report_figures(df, age_data, top15_states):
+#     # Daily Trend
+#     daily = (
+#         df.groupby('date')
+#         .agg(
+#             total_enrolments=('total_daily_enrolement', 'sum'),
+#             reporting_districts=('district', 'nunique')
+#         )
+#         .reset_index()
+#     )
+
+#     fig_trend = go.Figure()
+#     fig_trend.add_trace(go.Scatter(
+#         x=daily['date'],
+#         y=daily['total_enrolments'],
+#         mode='lines',
+#         name='Total Enrolments'
+#     ))
+
+#     # Weekday Pattern
+#     weekday = (
+#         df.groupby('day_name')['total_daily_enrolement']
+#         .sum()
+#         .reset_index()
+#     )
+
+#     fig_weekday = px.bar(
+#         weekday,
+#         x='day_name',
+#         y='total_daily_enrolement'
+#     )
+
+#     # Age Composition
+#     fig_age = px.pie(
+#         age_data,
+#         values="Share (%)",
+#         names="Age Group",
+#         hole=0.4
+#     )
+
+#     # Top States
+#     fig_top = px.bar(
+#         top15_states.sort_values('avg_enrolments_per_reported_day'),
+#         x='avg_enrolments_per_reported_day',
+#         y='state',
+#         orientation='h'
+#     )
+
+#     return fig_trend, fig_weekday, fig_age, fig_top
 
 
 
@@ -825,19 +906,13 @@ def page():
 
     if st.button("📥 Download National Aadhaar Report"):
 
-        # Build figures fresh (safe)
-        fig_trend, fig_weekday, fig_age_r, fig_top_r = build_national_report_figures(
-            df, age_data, top15_states
+        # ✅ CORRECT: generate charts using Matplotlib
+        chart_paths = build_national_report_figures_matplotlib(
+            df=df,
+            age_data=age_data,
+            top15_states=top15_states,
+            output_dir=CHART_DIR
         )
-
-        # Ensure chart dir
-        os.makedirs(CHART_DIR, exist_ok=True)
-
-        # Save charts
-        fig_trend.write_image(f"{CHART_DIR}/daily_trend.png")
-        fig_weekday.write_image(f"{CHART_DIR}/weekday_pattern.png")
-        fig_age_r.write_image(f"{CHART_DIR}/age_distribution.png")
-        fig_top_r.write_image(f"{CHART_DIR}/top_states.png")
 
         report_date = datetime.today().strftime("%d %B %Y")
 
@@ -853,24 +928,15 @@ def page():
 
         output_path = Path("reports/National_Aadhaar_Enrolment_Report.pdf")
 
-        chart_paths = [
-            ("Daily Enrolment Trend", f"{CHART_DIR}/daily_trend.png"),
-            ("Weekly Pattern", f"{CHART_DIR}/weekday_pattern.png"),
-            ("Age Composition", f"{CHART_DIR}/age_distribution.png"),
-            ("Top Performing States", f"{CHART_DIR}/top_states.png"),
-        ]
-
         create_pdf_report(
             output_path=str(output_path),
             report_text=report_text,
             chart_paths=chart_paths
         )
 
-        # 🔥 READ PDF BYTES
         with open(output_path, "rb") as f:
             pdf_bytes = f.read()
 
-        # 🔥 DOWNLOAD BUTTON (BROWSER)
         st.download_button(
             label="⬇️ Download National Aadhaar Report (PDF)",
             data=pdf_bytes,
@@ -879,6 +945,7 @@ def page():
         )
 
         st.success("✅ National Aadhaar Report generated successfully")
+
 
 
 # Run the page
