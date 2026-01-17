@@ -10,6 +10,66 @@ import plotly.express as px
 import plotly.graph_objects as go
 import unicodedata
 from utils.data_loader import load_data
+from utils.national_prompt import build_national_report_prompt
+from utils.pdf_report import create_pdf_report
+from datetime import datetime
+import os
+
+from pathlib import Path
+CHART_DIR = "reports/charts"
+os.makedirs(CHART_DIR, exist_ok=True)
+
+def build_national_report_figures(df, age_data, top15_states):
+    # Daily Trend
+    daily = (
+        df.groupby('date')
+        .agg(
+            total_enrolments=('total_daily_enrolement', 'sum'),
+            reporting_districts=('district', 'nunique')
+        )
+        .reset_index()
+    )
+
+    fig_trend = go.Figure()
+    fig_trend.add_trace(go.Scatter(
+        x=daily['date'],
+        y=daily['total_enrolments'],
+        mode='lines',
+        name='Total Enrolments'
+    ))
+
+    # Weekday Pattern
+    weekday = (
+        df.groupby('day_name')['total_daily_enrolement']
+        .sum()
+        .reset_index()
+    )
+
+    fig_weekday = px.bar(
+        weekday,
+        x='day_name',
+        y='total_daily_enrolement'
+    )
+
+    # Age Composition
+    fig_age = px.pie(
+        age_data,
+        values="Share (%)",
+        names="Age Group",
+        hole=0.4
+    )
+
+    # Top States
+    fig_top = px.bar(
+        top15_states.sort_values('avg_enrolments_per_reported_day'),
+        x='avg_enrolments_per_reported_day',
+        y='state',
+        orientation='h'
+    )
+
+    return fig_trend, fig_weekday, fig_age, fig_top
+
+
 
 def page():
     # ----------------------------- 
@@ -293,6 +353,7 @@ def page():
     "**This pie chart presents the distribution of Aadhaar enrolments across age groups (0–5, 5–17, and 18+ years) using "
     "reported records only, highlighting the relative contribution of each demographic segment to total enrolment volume.**"
 )
+
 
     
     with col2:
@@ -758,13 +819,67 @@ def page():
         use_container_width=True,
         hide_index=True
     )
-    
-    # Success banner
-    st.markdown("""
-        <div class="success-banner">
-            ✅ Dashboard loaded successfully | Data is up-to-date and coverage-aware
-        </div>
-    """, unsafe_allow_html=True)
+
+
+    st.markdown("## 📄 Generate National Aadhaar Report")
+
+    if st.button("📥 Download National Aadhaar Report"):
+
+        # Build figures fresh (safe)
+        fig_trend, fig_weekday, fig_age_r, fig_top_r = build_national_report_figures(
+            df, age_data, top15_states
+        )
+
+        # Ensure chart dir
+        os.makedirs(CHART_DIR, exist_ok=True)
+
+        # Save charts
+        fig_trend.write_image(f"{CHART_DIR}/daily_trend.png")
+        fig_weekday.write_image(f"{CHART_DIR}/weekday_pattern.png")
+        fig_age_r.write_image(f"{CHART_DIR}/age_distribution.png")
+        fig_top_r.write_image(f"{CHART_DIR}/top_states.png")
+
+        report_date = datetime.today().strftime("%d %B %Y")
+
+        report_text = build_national_report_prompt(
+            report_date=report_date,
+            total_enrolments=total_enrolments,
+            observed_reporting_days=observed_reporting_days,
+            states_reporting=states_reporting,
+            districts_reporting=districts_standardized,
+            age_df=age_data,
+            top_states_df=top15_states[['state', 'avg_enrolments_per_reported_day']]
+        )
+
+        output_path = Path("reports/National_Aadhaar_Enrolment_Report.pdf")
+
+        chart_paths = [
+            ("Daily Enrolment Trend", f"{CHART_DIR}/daily_trend.png"),
+            ("Weekly Pattern", f"{CHART_DIR}/weekday_pattern.png"),
+            ("Age Composition", f"{CHART_DIR}/age_distribution.png"),
+            ("Top Performing States", f"{CHART_DIR}/top_states.png"),
+        ]
+
+        create_pdf_report(
+            output_path=str(output_path),
+            report_text=report_text,
+            chart_paths=chart_paths
+        )
+
+        # 🔥 READ PDF BYTES
+        with open(output_path, "rb") as f:
+            pdf_bytes = f.read()
+
+        # 🔥 DOWNLOAD BUTTON (BROWSER)
+        st.download_button(
+            label="⬇️ Download National Aadhaar Report (PDF)",
+            data=pdf_bytes,
+            file_name="National_Aadhaar_Enrolment_Report.pdf",
+            mime="application/pdf"
+        )
+
+        st.success("✅ National Aadhaar Report generated successfully")
+
 
 # Run the page
 if __name__ == "__main__":

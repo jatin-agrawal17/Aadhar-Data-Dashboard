@@ -7,7 +7,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.sidebar.title("📊 Navigation")
+st.sidebar.title("📊 Analysis Sidebar")
 
 page = st.sidebar.radio(
     "Go to",
