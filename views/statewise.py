@@ -12,7 +12,11 @@ import plotly.io as pio
 from utils.gemini_report import generate_state_report
 from utils.pdf_report import create_pdf_report
 from datetime import datetime
-report_date = datetime.today().strftime("%d %B %Y")
+import pytz
+
+ist = pytz.timezone("Asia/Kolkata")
+report_date = datetime.now(ist).strftime("%d %B %Y")
+
 
 
 load_dotenv()
@@ -27,6 +31,72 @@ os.makedirs(REPORT_DIR, exist_ok=True)
 
 CHART_DIR = "reports/charts"
 os.makedirs(CHART_DIR, exist_ok=True)
+
+
+def build_state_report_figures_matplotlib(
+    daily_df,
+    weekday_df,
+    district_stats,
+    age_df,
+    state,
+    output_dir
+):
+    os.makedirs(output_dir, exist_ok=True)
+    chart_paths = []
+
+    # Daily trend
+    plt.figure(figsize=(10, 4))
+    plt.plot(daily_df['date'], daily_df['total_enrolments'])
+    plt.title(f"{state}: Daily Aadhaar Enrolments")
+    plt.xlabel("Date")
+    plt.ylabel("Total Enrolments")
+    plt.tight_layout()
+    path = f"{output_dir}/daily.png"
+    plt.savefig(path)
+    plt.close()
+    chart_paths.append(("Daily Enrolment Trend", path))
+
+    # Weekly pattern
+    plt.figure(figsize=(8, 4))
+    plt.bar(weekday_df['day_name'], weekday_df['total_daily_enrolement'])
+    plt.title(f"{state}: Enrolments by Day of Week")
+    plt.tight_layout()
+    path = f"{output_dir}/weekday.png"
+    plt.savefig(path)
+    plt.close()
+    chart_paths.append(("Weekly Pattern", path))
+
+    # Coverage vs intensity
+    plt.figure(figsize=(6, 5))
+    plt.scatter(
+        district_stats['reporting_days'],
+        district_stats['avg_enrolments_per_reported_day']
+    )
+    plt.title(f"{state}: Coverage vs Enrolment Intensity")
+    plt.xlabel("Reporting Days")
+    plt.ylabel("Avg Enrolments")
+    plt.tight_layout()
+    path = f"{output_dir}/coverage.png"
+    plt.savefig(path)
+    plt.close()
+    chart_paths.append(("Coverage vs Intensity", path))
+
+    # Age composition
+    plt.figure(figsize=(6, 6))
+    plt.pie(
+        age_df['Share (%)'],
+        labels=age_df['Age Group'],
+        autopct='%1.1f%%'
+    )
+    plt.title(f"{state}: Age-wise Enrolment Composition")
+    plt.tight_layout()
+    path = f"{output_dir}/age.png"
+    plt.savefig(path)
+    plt.close()
+    chart_paths.append(("Age Composition", path))
+
+    return chart_paths
+
 
 
 def build_report_prompt(state,report_date, section_a_df, section_b_df, top_districts_raw, age_df):
@@ -794,38 +864,33 @@ def page():
 
             # 1️⃣ Generate text report
             prompt = build_report_prompt(
-                    state,
-                    report_date,
-                    section_a_df,
-                    section_b_df,
-                    top_districts_raw,
-                    age_df
+                state,
+                report_date,
+                section_a_df,
+                section_b_df,
+                top_districts_raw,
+                age_df
             )
 
             report_text = generate_state_report(prompt)
 
-            # 2️⃣ Save charts
-            chart_paths = []
-
-            pio.write_image(fig_daily, f"{CHART_DIR}/daily.png")
-            chart_paths.append(("Daily Enrolment Trend", f"{CHART_DIR}/daily.png"))
-
-            pio.write_image(fig_weekday, f"{CHART_DIR}/weekday.png")
-            chart_paths.append(("Weekly Pattern", f"{CHART_DIR}/weekday.png"))
-
-            pio.write_image(fig_scatter, f"{CHART_DIR}/coverage.png")
-            chart_paths.append(("Coverage vs Intensity", f"{CHART_DIR}/coverage.png"))
-
-            pio.write_image(fig_age, f"{CHART_DIR}/age.png")
-            chart_paths.append(("Age Composition", f"{CHART_DIR}/age.png"))
+            # 2️⃣ Save charts (Matplotlib, NOT Plotly)
+            chart_paths = build_state_report_figures_matplotlib(
+                daily_df=daily,
+                weekday_df=weekday_df,
+                district_stats=district_stats,
+                age_df=age_df,
+                state=state,
+                output_dir=CHART_DIR
+            )
 
             # 3️⃣ Create PDF
             pdf_path = f"reports/{state.replace(' ', '_')}_Aadhaar_Report.pdf"
 
             create_pdf_report(
-                 pdf_path,
-    report_text,
-    chart_paths
+                pdf_path,
+                report_text,
+                chart_paths
             )
 
         with open(pdf_path, "rb") as f:
