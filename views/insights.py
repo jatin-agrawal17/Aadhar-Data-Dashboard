@@ -6,848 +6,530 @@ def page():
     df = load_data()
 
     # =====================================================
-    # ENHANCED HEADER WITH CYAN THEME STYLING
+    # ENHANCED HEADER WITH MODERN CYAN THEME STYLING
     # =====================================================
     st.markdown("""
-        <style>
-        /* Main header with gradient animation */
+    <style>
+    /* Import modern font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    
+    /* Global typography improvements */
+    * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    /* Main header with gradient and animation */
+    .main-header {
+        font-size: 3.2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #00bcd4, #0097a7, #00acc1);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        margin-bottom: 2rem;
+        animation: gradientShift 4s ease infinite;
+        letter-spacing: -0.5px;
+    }
+    
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+    
+    /* Subheader styling */
+    .section-header {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #00838f;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        padding-left: 0.5rem;
+        border-left: 4px solid #00bcd4;
+    }
+    
+    /* Enhanced metric box with hover effect */
+    .metric-box {
+        background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+        padding: 1.8rem;
+        border-radius: 16px;
+        border-left: 6px solid #00bcd4;
+        margin: 1.5rem 0;
+        box-shadow: 0 4px 6px rgba(0, 188, 212, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .metric-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .metric-box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 188, 212, 0.2);
+    }
+    
+    .metric-box:hover::before {
+        opacity: 1;
+    }
+    
+    /* Enhanced cyan box with glass morphism effect */
+    .cyan-box {
+        background: linear-gradient(135deg, rgba(224, 247, 250, 0.95) 0%, rgba(178, 235, 242, 0.95) 100%);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: 16px;
+        border: 2px solid #00bcd4;
+        margin: 1.5rem 0;
+        box-shadow: 0 8px 32px rgba(0, 188, 212, 0.15);
+        transition: all 0.3s ease;
+    }
+    
+    .cyan-box:hover {
+        box-shadow: 0 12px 40px rgba(0, 188, 212, 0.25);
+        transform: translateY(-3px);
+    }
+    
+    /* Enhanced warning box */
+    .warning-box {
+        background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+        padding: 1.8rem;
+        border-radius: 16px;
+        border-left: 6px solid #ffa726;
+        margin: 1.5rem 0;
+        box-shadow: 0 4px 6px rgba(255, 167, 38, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .warning-box:hover {
+        box-shadow: 0 8px 16px rgba(255, 167, 38, 0.2);
+        transform: translateY(-2px);
+    }
+    
+    /* Enhanced highlight text with pill design */
+    .highlight-text {
+        background: linear-gradient(135deg, #80deea, #4dd0e1);
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 700;
+        color: #004d40;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(0, 188, 212, 0.2);
+        transition: all 0.2s ease;
+    }
+    
+    .highlight-text:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 188, 212, 0.3);
+    }
+    
+    /* Animated gradient divider */
+    .cyan-divider {
+        height: 4px;
+        background: linear-gradient(90deg, transparent, #00bcd4, #0097a7, #00bcd4, transparent);
+        background-size: 200% 100%;
+        border: none;
+        margin: 3rem 0;
+        border-radius: 2px;
+        animation: dividerFlow 3s ease infinite;
+    }
+    
+    @keyframes dividerFlow {
+        0%, 100% { background-position: 0% 0%; }
+        50% { background-position: 100% 0%; }
+    }
+    
+    /* Icon badge styling */
+    .icon-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #00bcd4, #0097a7);
+        border-radius: 12px;
+        font-size: 1.5rem;
+        margin-right: 0.8rem;
+        box-shadow: 0 4px 8px rgba(0, 188, 212, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .icon-badge:hover {
+        transform: rotate(5deg) scale(1.1);
+    }
+    
+    /* Stats card */
+    .stats-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 2px solid #e0f7fa;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .stats-card:hover {
+        border-color: #00bcd4;
+        box-shadow: 0 8px 16px rgba(0, 188, 212, 0.15);
+        transform: translateY(-4px);
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #00bcd4, #0097a7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0.5rem 0;
+    }
+    
+    .stats-label {
+        font-size: 0.9rem;
+        color: #546e7a;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Conclusion box with special styling */
+    .conclusion-box {
+        background: linear-gradient(135deg, #006064 0%, #00838f 100%);
+        color: white;
+        padding: 2.5rem;
+        border-radius: 20px;
+        margin: 2rem 0;
+        box-shadow: 0 12px 40px rgba(0, 96, 100, 0.3);
+        border: 3px solid #00bcd4;
+    }
+    
+    .conclusion-box strong {
+        color: #80deea;
+    }
+    
+    /* Acknowledgement section */
+    .ack-box {
+        background: linear-gradient(135deg, #f5f5f5 0%, #e8f5e9 100%);
+        padding: 2.5rem;
+        border-radius: 20px;
+        text-align: center;
+        border: 2px solid #00bcd4;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+    
+    /* Streamlit expander customization */
+    .streamlit-expanderHeader {
+        background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        color: #00695c;
+        border-left: 3px solid #00bcd4;
+    }
+    
+    /* Pulse animation for key stats */
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+    
+    .pulse-stat {
+        animation: pulse 2s ease infinite;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
         .main-header {
-            font-size: 2.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #00bcd4 0%, #00acc1 50%, #00bcd4 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            animation: gradient-shift 3s ease infinite;
-            background-size: 200% 200%;
+            font-size: 2.2rem;
         }
-        
-        @keyframes gradient-shift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .stats-number {
+            font-size: 2rem;
         }
-        
-        /* Insight cards */
-        .insight-card {
-            background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
-            padding: 1.5rem;
-            border-radius: 12px;
-            color: white;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 6px 12px rgba(0,188,212,0.4);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .insight-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,188,212,0.5);
-        }
-        
-        /* Metric boxes with enhanced styling */
-        .metric-box {
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-            padding: 1.3rem;
-            border-radius: 10px;
-            border-left: 5px solid #00bcd4;
-            margin: 1.2rem 0;
-            box-shadow: 0 3px 8px rgba(0,188,212,0.2);
-            transition: all 0.3s ease;
-        }
-        
-        .metric-box:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,188,212,0.3);
-        }
-        
-        /* Highlight text with better contrast */
-        .highlight-text {
-            background: linear-gradient(135deg, #b2ebf2 0%, #80deea 100%);
-            color: #004d40;
-            padding: 0.3rem 0.6rem;
-            border-radius: 6px;
-            font-weight: 700;
-            box-shadow: 0 2px 4px rgba(0,188,212,0.2);
-        }
-        
-        /* Enhanced cyan divider with shadow */
-        .cyan-divider {
-            height: 4px;
-            background: linear-gradient(90deg, transparent, #00bcd4, #00acc1, #00bcd4, transparent);
-            border: none;
-            margin: 2.5rem 0;
-            box-shadow: 0 2px 4px rgba(0,188,212,0.3);
-            border-radius: 2px;
-        }
-        
-        /* Cyan box with enhanced styling */
-        .cyan-box {
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-            padding: 1.8rem;
-            border-radius: 12px;
-            border: 2px solid #00bcd4;
-            margin: 1.2rem 0;
-            box-shadow: 0 4px 10px rgba(0,188,212,0.2);
-            transition: all 0.3s ease;
-        }
-        
-        .cyan-box:hover {
-            box-shadow: 0 6px 15px rgba(0,188,212,0.3);
-            border-color: #00acc1;
-        }
-        
-        /* Enhanced cyan badges with animation */
-        .cyan-badge {
-            background: linear-gradient(135deg, #00bcd4 0%, #00acc1 100%);
-            color: white;
-            padding: 0.4rem 1rem;
-            border-radius: 25px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            display: inline-block;
-            margin: 0.3rem;
-            box-shadow: 0 3px 6px rgba(0,188,212,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .cyan-badge:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 10px rgba(0,188,212,0.4);
-        }
-        
-        /* Insight number badges */
-        .insight-number {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: #00bcd4;
-            opacity: 0.15;
-            float: left;
-            margin-right: 1.5rem;
-            line-height: 1;
-            text-shadow: 2px 2px 4px rgba(0,188,212,0.2);
-        }
-        
-        /* Section headers with better visual */
-        .section-header {
-            color: #00838f;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 2rem 0 1rem 0;
-            padding-bottom: 0.5rem;
-            border-bottom: 3px solid #00bcd4;
-            display: inline-block;
-        }
-        
-        /* Card containers for impact factors */
-        .impact-card {
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 2px solid #00bcd4;
-            text-align: center;
-            height: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 8px rgba(0,188,212,0.2);
-        }
-        
-        .impact-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 16px rgba(0,188,212,0.4);
-            border-color: #00acc1;
-        }
-        
-        .impact-card h3 {
-            color: #00838f;
-            margin: 0 0 0.8rem 0;
-            font-size: 1.3rem;
-        }
-        
-        .impact-card p {
-            color: #00acc1;
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin: 0;
-        }
-        
-        /* Warning boxes with better styling */
-        .warning-box {
-            background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
-            padding: 1.3rem;
-            border-radius: 10px;
-            border-left: 5px solid #ffa726;
-            box-shadow: 0 3px 8px rgba(255,167,38,0.2);
-            margin: 1rem 0;
-        }
-        
-        /* Activity status cards */
-        .activity-high {
-            background: linear-gradient(135deg, #a7ffeb 0%, #64ffda 100%);
-            padding: 1.8rem;
-            border-radius: 12px;
-            text-align: center;
-            border: 3px solid #00bfa5;
-            box-shadow: 0 4px 10px rgba(0,191,165,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .activity-high:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(0,191,165,0.4);
-        }
-        
-        .activity-medium {
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-            padding: 1.8rem;
-            border-radius: 12px;
-            text-align: center;
-            border: 3px solid #00bcd4;
-            box-shadow: 0 4px 10px rgba(0,188,212,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .activity-medium:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(0,188,212,0.4);
-        }
-        
-        .activity-low {
-            background: linear-gradient(135deg, #ffccbc 0%, #ffab91 100%);
-            padding: 1.8rem;
-            border-radius: 12px;
-            text-align: center;
-            border: 3px solid #ff7043;
-            box-shadow: 0 4px 10px rgba(255,112,67,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .activity-low:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(255,112,67,0.4);
-        }
-        
-        /* Age group card */
-        .age-card {
-            background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
-            color: white;
-            box-shadow: 0 6px 12px rgba(0,188,212,0.4);
-            transition: all 0.3s ease;
-        }
-        
-        .age-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,188,212,0.5);
-        }
-        
-        .age-card h4 {
-            margin: 0;
-            opacity: 0.95;
-            font-size: 1.1rem;
-        }
-        
-        .age-card h2 {
-            margin: 1rem 0;
-            font-size: 3rem;
-            font-weight: 900;
-        }
-        
-        .age-card p {
-            margin: 0;
-            opacity: 0.95;
-            font-size: 1rem;
-        }
-        
-        /* Progress bars for spatial distribution */
-        .progress-container {
-            background-color: rgba(0,188,212,0.1);
-            border-radius: 10px;
-            padding: 0.3rem;
-            margin: 1rem auto;
-        }
-        
-        .progress-bar {
-            height: 24px;
-            border-radius: 8px;
-            transition: width 0.5s ease;
-            box-shadow: 0 2px 4px rgba(0,188,212,0.3);
-        }
-        
-        /* Conclusion box */
-        .conclusion-box {
-            background: linear-gradient(135deg, #a7ffeb 0%, #64ffda 100%);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 3px solid #00bfa5;
-            box-shadow: 0 6px 15px rgba(0,191,165,0.3);
-            margin: 1.5rem 0;
-        }
-        
-        /* Acknowledgement box */
-        .ack-box {
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-            padding: 2.5rem;
-            border-radius: 18px;
-            text-align: center;
-            border: 3px solid #00bcd4;
-            box-shadow: 0 8px 20px rgba(0,188,212,0.3);
-        }
-        
-        /* Expander styling */
-        .streamlit-expanderHeader {
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-            border-radius: 8px;
-            border: 2px solid #00bcd4;
-            font-weight: 600;
-            color: #00838f;
-        }
-        
-        /* Tabs enhancement */
-        .stTabs [data-baseweb="tab-list"] {
-            gap: 10px;
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-            padding: 0.8rem;
-            border-radius: 12px;
-            box-shadow: 0 3px 8px rgba(0,188,212,0.2);
-        }
-        
-        .stTabs [data-baseweb="tab"] {
-            height: 55px;
-            background-color: white;
-            border-radius: 10px;
-            color: #00838f;
-            font-weight: 700;
-            padding: 0 2rem;
-            border: 2px solid #b2ebf2;
-            transition: all 0.3s ease;
-        }
-        
-        .stTabs [data-baseweb="tab"]:hover {
-            background-color: #e0f7fa;
-            border-color: #00bcd4;
-        }
-        
-        .stTabs [aria-selected="true"] {
-            background: linear-gradient(135deg, #00bcd4 0%, #00acc1 100%);
-            color: white;
-            border: 2px solid #00bcd4;
-            box-shadow: 0 4px 8px rgba(0,188,212,0.3);
-        }
-        </style>
+    }
+    </style>
     """, unsafe_allow_html=True)
 
-    # Enhanced title with icon
-    st.markdown('<p class="main-header">📌 Key Insights & Observations</p>', unsafe_allow_html=True)
-
-    # Enhanced introduction with cyan theme
-    col1, col2, col3 = st.columns([1, 6, 1])
-    with col2:
-        st.markdown("""
-        <div class="cyan-box">
-        <h4 style="color: #00838f; margin-top: 0; font-size: 1.5rem;">🌊 Welcome to the Insights Dashboard!</h4>
-        <p style="color: #006064; font-size: 1.05rem; line-height: 1.6;">
-        This section highlights the major insights derived from Aadhaar enrolment data 
-        across states, districts, time periods, and demographic groups.
+    # =====================================================
+    # HEADER WITH ANIMATED BADGE
+    # =====================================================
+    st.markdown('''
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <p class="main-header">📌 Key Insights & Observations</p>
+        <p style="color: #546e7a; font-size: 1.1rem; font-weight: 500;">
+            Data-Driven Analysis of Aadhaar Enrolment Patterns
         </p>
-        <div style="margin-top: 1.5rem;">
-        <span class="cyan-badge">📊 Data-Driven Analysis</span>
-        <span class="cyan-badge">🔍 Pattern Recognition</span>
-        <span class="cyan-badge">📈 Trend Insights</span>
-        </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
-
-    # =====================================================
-    # INSIGHT 1 - Enhanced
-    # =====================================================
-    with st.container():
-        col1, col2 = st.columns([1, 20])
-        with col1:
-            st.markdown("### 1️⃣")
-        with col2:
-            st.markdown("### <span style='color: #00838f;'>Significant State-level Disparities</span>", unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="metric-box">
-        <p style="margin: 0; font-size: 1.1rem; color: #006064;">
-        Aadhaar enrolment activity is <span class="highlight-text">highly uneven across states</span>.  
-        A small number of states contribute a disproportionately large share of total enrolments.
-        </p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.markdown("""
-            <div class="impact-card">
-                <h3>Population Size</h3>
-                <p>🔼 High Impact</p>
-            </div>
-            """, unsafe_allow_html=True)
-        with col2:
-            st.markdown("""
-            <div class="impact-card">
-                <h3>Admin Capacity</h3>
-                <p>➡️ Medium Impact</p>
-            </div>
-            """, unsafe_allow_html=True)
-        with col3:
-            st.markdown("""
-            <div class="impact-card">
-                <h3>Outreach</h3>
-                <p>🔄 Variable</p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        with st.expander("💡 Why does this matter?", expanded=False):
-            st.markdown("""
-            <div style="background-color: #e0f7fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #00bcd4;">
-            
-            <p style="color: #006064; font-size: 1.05rem; margin-bottom: 0.8rem;">
-            <strong style="color: #00838f;">🎯 Resource Allocation:</strong> Helps identify states needing additional resources
-            </p>
-            <p style="color: #006064; font-size: 1.05rem; margin-bottom: 0.8rem;">
-            <strong style="color: #00838f;">⭐ Best Practices:</strong> Reveals best practices from high-performing states
-            </p>
-            <p style="color: #006064; font-size: 1.05rem; margin-bottom: 0;">
-            <strong style="color: #00838f;">🚀 Strategic Planning:</strong> Guides targeted intervention strategies
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-
-    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
-
-    # =====================================================
-    # INSIGHT 2 - Enhanced
-    # =====================================================
-    with st.container():
-        col1, col2 = st.columns([1, 20])
-        with col1:
-            st.markdown("### 2️⃣")
-        with col2:
-            st.markdown("### <span style='color: #00838f;'>Inconsistent Reporting Across Time</span>", unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="warning-box">
-        <strong style="font-size: 1.2rem;">⚠️ Data Coverage Alert</strong><br><br>
-        <p style="margin: 0; font-size: 1.05rem;">
-        Not all states and districts report enrolment data consistently across the full national timeline.
-        </p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="cyan-box">
-        <p style="color: #006064; font-size: 1.1rem; margin-bottom: 1.2rem;">
-        Several states show <strong>partial reporting windows</strong>, which impacts:
-        </p>
-        <div style="margin-top: 1rem;">
-        <span class="cyan-badge">📊 Comparability</span>
-        <span class="cyan-badge">📈 Trend Analysis</span>
-        <span class="cyan-badge">🔢 Total Estimates</span>
-        </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        with st.expander("📈 View Impact"):
-            st.markdown("""
-            <div style="background-color: #e0f7fa; padding: 1.5rem; border-radius: 10px; border: 2px solid #00bcd4;">
-            <p style="color: #006064; font-size: 1.05rem; line-height: 1.6;">
-            This highlights the importance of accounting for <strong style="color: #00838f;">data coverage bias</strong> 
-            while interpreting totals and making cross-state comparisons.
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-
-    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
-
-    # =====================================================
-    # INSIGHT 3 - Enhanced
-    # =====================================================
-    with st.container():
-        col1, col2 = st.columns([1, 20])
-        with col1:
-            st.markdown("### 3️⃣")
-        with col2:
-            st.markdown("### <span style='color: #00838f;'>Large District-level Variations</span>", unsafe_allow_html=True)
-        
-        tab1, tab2 = st.tabs(["📊 Variation Factors", "🔍 Patterns Observed"])
-        
-        with tab1:
-            st.markdown("""
-            <div class="metric-box">
-            <p style="margin: 0; font-size: 1.1rem; color: #006064;">
-            Even within the same state, districts vary widely in:
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown("<br>", unsafe_allow_html=True)
-            
-            col1, col2 = st.columns(2)
-            with col1:
-                st.markdown("""
-                <div class="cyan-box">
-                <h4 style="color: #00838f; margin-top: 0;">📅 Temporal Factors</h4>
-                <p style="color: #006064; font-size: 1.05rem; line-height: 1.8;">
-                • Number of reporting days<br>
-                • Reporting frequency patterns
-                </p>
-                </div>
-                """, unsafe_allow_html=True)
-            with col2:
-                st.markdown("""
-                <div class="cyan-box">
-                <h4 style="color: #00838f; margin-top: 0;">📈 Operational Factors</h4>
-                <p style="color: #006064; font-size: 1.05rem; line-height: 1.8;">
-                • Average daily enrolments<br>
-                • Infrastructure availability
-                </p>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        with tab2:
-            st.markdown("""
-            <div class="cyan-box">
-            <h4 style="color: #00838f; margin-top: 0; font-size: 1.3rem;">🔍 Key Patterns Identified</h4>
-            <p style="color: #006064; font-size: 1.05rem; line-height: 1.8; margin-top: 1rem;">
-            <strong style="color: #00acc1;">Pattern 1:</strong> Some districts report infrequently but with high volumes<br><br>
-            <strong style="color: #00acc1;">Pattern 2:</strong> Others report regularly with lower activity
-            </p>
-            <p style="color: #00838f; font-size: 1.1rem; margin-top: 1.5rem; font-weight: 600;">
-            → Suggests <span class="highlight-text">operational and infrastructure differences</span> at the district level
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-
-    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
-
-    # =====================================================
-    # INSIGHT 4 - Enhanced
-    # =====================================================
-    with st.container():
-        col1, col2 = st.columns([1, 20])
-        with col1:
-            st.markdown("### 4️⃣")
-        with col2:
-            st.markdown("### <span style='color: #00838f;'>Clear Weekly Enrolment Patterns</span>", unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="metric-box">
-        <p style="margin: 0; font-size: 1.1rem; color: #006064;">
-        Enrolment activity follows a <span class="highlight-text">distinct weekly pattern</span> 
-        aligned with office working schedules.
-        </p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.markdown("""
-            <div class="activity-high">
-                <h3 style="color: #00695c; margin: 0 0 1rem 0; font-size: 1.4rem;">Weekdays</h3>
-                <p style="font-size: 2.5rem; margin: 0.5rem 0;">🔼</p>
-                <p style="color: #00897b; font-weight: 700; font-size: 1.15rem; margin: 0;">Higher Activity</p>
-            </div>
-            """, unsafe_allow_html=True)
-        with col2:
-            st.markdown("""
-            <div class="activity-medium">
-                <h3 style="color: #00838f; margin: 0 0 1rem 0; font-size: 1.4rem;">Saturdays</h3>
-                <p style="font-size: 2.5rem; margin: 0.5rem 0;">➡️</p>
-                <p style="color: #00acc1; font-weight: 700; font-size: 1.15rem; margin: 0;">Moderate Activity</p>
-            </div>
-            """, unsafe_allow_html=True)
-        with col3:
-            st.markdown("""
-            <div class="activity-low">
-                <h3 style="color: #bf360c; margin: 0 0 1rem 0; font-size: 1.4rem;">Sundays</h3>
-                <p style="font-size: 2.5rem; margin: 0.5rem 0;">🔽</p>
-                <p style="color: #d84315; font-weight: 700; font-size: 1.15rem; margin: 0;">Reduced Activity</p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        with st.expander("💼 Operational Implications"):
-            st.markdown("""
-            <div class="cyan-box">
-            <p style="color: #006064; font-size: 1.05rem; line-height: 1.8; margin-bottom: 0.8rem;">
-            <strong style="color: #00838f;">📋 Staffing:</strong> Optimize resource allocation based on day of week
-            </p>
-            <p style="color: #006064; font-size: 1.05rem; line-height: 1.8; margin-bottom: 0.8rem;">
-            <strong style="color: #00838f;">🔧 Planning:</strong> Schedule maintenance during low-activity periods
-            </p>
-            <p style="color: #006064; font-size: 1.05rem; line-height: 1.8; margin-bottom: 0;">
-            <strong style="color: #00838f;">📊 Forecasting:</strong> Account for weekly patterns in projections
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-
-    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
-
-    # =====================================================
-    # INSIGHT 5 - Enhanced
-    # =====================================================
-    with st.container():
-        col1, col2 = st.columns([1, 20])
-        with col1:
-            st.markdown("### 5️⃣")
-        with col2:
-            st.markdown("### <span style='color: #00838f;'>Adult Enrolments Dominate</span>", unsafe_allow_html=True)
-        
-        col1, col2 = st.columns([2, 1])
-        with col1:
-            st.markdown("""
-            <div class="metric-box">
-            <p style="color: #006064; font-size: 1.1rem; margin-bottom: 1.2rem;">
-            The <strong>18+ age group accounts for the majority of enrolments</strong>, reflecting:
-            </p>
-            <p style="color: #006064; font-size: 1.05rem; line-height: 1.8; margin: 0;">
-            ✅ First-time registrations<br>
-            ✅ Updates and corrections<br>
-            ✅ Linkages with welfare and financial services
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-        with col2:
-            st.markdown("""
-            <div class="age-card">
-                <h4>Primary Age Group</h4>
-                <h2>18+</h2>
-                <p>Majority Share</p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="cyan-box">
-        <p style="color: #006064; font-size: 1.05rem; line-height: 1.6; margin: 0;">
-        📚 <strong style="color: #00838f;">Child Enrolments (0-17 years):</strong> Form a smaller but important segment, 
-        often influenced by school admissions and welfare eligibility requirements.
-        </p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
-
-    # =====================================================
-    # INSIGHT 6 - Enhanced
-    # =====================================================
-    with st.container():
-        col1, col2 = st.columns([1, 20])
-        with col1:
-            st.markdown("### 6️⃣")
-        with col2:
-            st.markdown("### <span style='color: #00838f;'>Spatial Concentration of Enrolment Activity</span>", unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="metric-box">
-        <p style="margin: 0; font-size: 1.1rem; color: #006064;">
-        Where geospatial data is available, enrolment intensity is 
-        <span class="highlight-text">spatially clustered</span> rather than uniform.
-        </p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.markdown("""
-            <div class="cyan-box" style="text-align: center;">
-            <h4 style="color: #00838f; margin-top: 0;">🏙️ Urban Areas</h4>
-            <div class="progress-container">
-                <div class="progress-bar" style="background: linear-gradient(90deg, #00bcd4, #00acc1); width: 85%;"></div>
-            </div>
-            <p style="color: #00acc1; font-weight: 700; font-size: 1.1rem;">High intensity (85%)</p>
-            </div>
-            """, unsafe_allow_html=True)
-        with col2:
-            st.markdown("""
-            <div class="cyan-box" style="text-align: center;">
-            <h4 style="color: #00838f; margin-top: 0;">🏘️ Semi-Urban</h4>
-            <div class="progress-container">
-                <div class="progress-bar" style="background: linear-gradient(90deg, #26c6da, #00bcd4); width: 60%;"></div>
-            </div>
-            <p style="color: #00acc1; font-weight: 700; font-size: 1.1rem;">Medium intensity (60%)</p>
-            </div>
-            """, unsafe_allow_html=True)
-        with col3:
-            st.markdown("""
-            <div class="cyan-box" style="text-align: center;">
-            <h4 style="color: #00838f; margin-top: 0;">🌾 Rural Areas</h4>
-            <div class="progress-container">
-                <div class="progress-bar" style="background: linear-gradient(90deg, #4dd0e1, #26c6da); width: 35%;"></div>
-            </div>
-            <p style="color: #00acc1; font-weight: 700; font-size: 1.1rem;">Lower intensity (35%)</p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        with st.expander("🗺️ Contributing Factors"):
-            st.markdown("""
-            <div class="cyan-box">
-            <p style="color: #006064; font-size: 1.05rem; line-height: 1.8; margin-bottom: 1rem;">
-            <span class="cyan-badge">🚗 Accessibility</span> Proximity to enrollment centers
-            </p>
-            <p style="color: #006064; font-size: 1.05rem; line-height: 1.8; margin-bottom: 1rem;">
-            <span class="cyan-badge">👥 Population Density</span> Higher in urban areas
-            </p>
-            <p style="color: #006064; font-size: 1.05rem; line-height: 1.8; margin-bottom: 0;">
-            <span class="cyan-badge">🏢 Infrastructure</span> Better connectivity and facilities
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-
-    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
-
-    # =====================================================
-    # INSIGHT 7 - Enhanced
-    # =====================================================
-    with st.container():
-        col1, col2 = st.columns([1, 20])
-        with col1:
-            st.markdown("### 7️⃣")
-        with col2:
-            st.markdown("### <span style='color: #00838f;'>Data Quality & Interpretation Caveats</span>", unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="warning-box">
-        <strong style="font-size: 1.2rem;">⚠️ Important Considerations</strong>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("""
-            <div class="cyan-box">
-            <h4 style="color: #00838f; margin-top: 0;">⚠️ Challenges</h4>
-            <p style="color: #006064; font-size: 1.05rem; line-height: 1.8;">
-            ❌ Uneven reporting durations<br>
-            ❌ Missing district/pincode records<br>
-            ❌ Variations in data granularity
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-        with col2:
-            st.markdown("""
-            <div class="cyan-box">
-            <h4 style="color: #00838f; margin-top: 0;">✅ Best Practices</h4>
-            <p style="color: #006064; font-size: 1.05rem; line-height: 1.8;">
-            ✅ Balance quantity vs. quality<br>
-            ✅ Account for coverage bias<br>
-            ✅ Cross-validate findings
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-
-    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
-
-    # =====================================================
-    # CONCLUSION - Enhanced
-    # =====================================================
-    st.markdown("## <span style='color: #00838f;'>📊 Conclusion</span>", unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div class="conclusion-box">
-    <p style="color: #00695c; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem;">
-    This analysis demonstrates how Aadhaar enrolment data can reveal meaningful patterns
-    </p>
-    <p style="color: #006064; font-size: 1.05rem; margin: 0;">
-    related to administrative performance, demographic coverage, and operational efficiency.
-    </p>
     </div>
-    """, unsafe_allow_html=True)
+    ''', unsafe_allow_html=True)
+
+    # =====================================================
+    # KEY STATISTICS OVERVIEW (NEW)
+    # =====================================================
+    st.markdown("### 📊 At a Glance")
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    col1, col2, col3, col4 = st.columns(4)
     
-    st.markdown("### <span style='color: #00838f;'>🎯 Dashboard Capabilities</span>", unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
     with col1:
         st.markdown("""
-        <div class="cyan-box">
-        <h4 style="color: #00838f; margin-top: 0; font-size: 1.3rem;">👨‍💼 For Analysts</h4>
-        <p style="color: #006064; font-size: 1.05rem; line-height: 1.8;">
-        📊 Compare enrolment behavior across states<br>
-        🔍 Identify reporting gaps<br>
-        📈 Understand demographic trends
-        </p>
+        <div class="stats-card">
+            <div class="stats-label">States/UTs</div>
+            <div class="stats-number pulse-stat">54→36</div>
+            <div style="color: #00838f; font-weight: 600;">Normalized</div>
         </div>
         """, unsafe_allow_html=True)
+    
     with col2:
         st.markdown("""
-        <div class="cyan-box">
-        <h4 style="color: #00838f; margin-top: 0; font-size: 1.3rem;">🎯 For Decision Makers</h4>
-        <p style="color: #006064; font-size: 1.05rem; line-height: 1.8;">
-        💡 Support data-driven policy decisions<br>
-        🎯 Guide resource allocation<br>
-        📋 Enable strategic planning
-        </p>
+        <div class="stats-card">
+            <div class="stats-label">Districts</div>
+            <div class="stats-number pulse-stat">984→772</div>
+            <div style="color: #00838f; font-weight: 600;">Cleaned</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class="stats-card">
+            <div class="stats-label">Age 0-5</div>
+            <div class="stats-number pulse-stat">~65%</div>
+            <div style="color: #00838f; font-weight: 600;">Of Enrolments</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col4:
+        st.markdown("""
+        <div class="stats-card">
+            <div class="stats-label">Adult (18+)</div>
+            <div class="stats-number pulse-stat">~3%</div>
+            <div style="color: #00838f; font-weight: 600;">Only</div>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
 
     # =====================================================
-    # ACKNOWLEDGEMENT - Enhanced
+    # INSIGHT 1
     # =====================================================
-    st.markdown("## <span style='color: #00838f;'>🙏 Acknowledgement</span>", unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns([1, 6, 1])
-    with col2:
-        st.markdown("""
-        <div class="ack-box">
-        
-        <h4 style="color: #00838f; margin-top: 0; font-size: 1.5rem;">📊 Data & Purpose</h4>
-        
-        <p style="color: #006064; font-size: 1.05rem; line-height: 1.8; margin: 1.5rem 0;">
-        <strong style="color: #00acc1;">Data Source:</strong> Publicly available Aadhaar enrolment records<br>
-        <strong style="color: #00acc1;">Purpose:</strong> Analytical and educational use<br>
-        <strong style="color: #00acc1;">Goal:</strong> Support transparent and informed decision-making
-        </p>
-        
-        <hr style="border: 2px solid #00bcd4; margin: 2rem 0;">
-        
-        <h4 style="color: #00838f; font-size: 1.5rem;">🛠️ Built With</h4>
-        
-        <div style="margin: 1.5rem 0;">
-        <span class="cyan-badge">Python</span>
-        <span class="cyan-badge">Streamlit</span>
-        <span class="cyan-badge">Pandas</span>
-        <span class="cyan-badge">Plotly</span>
-        <span class="cyan-badge">GeoPandas</span>
-        </div>
-        
-        <hr style="border: 2px solid #00bcd4; margin: 2rem 0;">
-        
-        <h3 style="color: #00838f; margin-bottom: 0; font-size: 1.6rem;">Thank you for exploring the insights! 🎉</h3>
-        
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown('<p class="section-header">1️⃣ Geographic Identifier Inflation in Raw Data</p>', unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("""
-    <p style="text-align: center; color: #00acc1; font-weight: 700; font-size: 1.1rem;">
-    💻 Dashboard developed for data-driven governance and policy analysis
+    <div class="metric-box">
+    The raw Aadhaar enrolment dataset exhibited <strong>artificial inflation of geographic identifiers</strong>,
+    containing <span class="highlight-text">54 state/UT labels, 984 district labels, and 19,462 pincodes</span>,
+    far exceeding official administrative counts.
+    </div>
+    """, unsafe_allow_html=True)
+
+    with st.expander("🔍 Why this mattered", expanded=False):
+        st.markdown("""
+        - 🎯 **Root Cause**: Spelling variants, legacy names, formatting noise, and numeric word-order differences  
+        - 📉 **Impact**: Aggregation and spatial analysis were severely distorted without correction  
+        - ✅ **Solution**: Rule-based normalization reduced districts to **772 valid entities**
+        - 🛠️ **Methodology**: Fuzzy matching, canonical name mapping, and administrative hierarchy validation
+        """)
+
+    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
+
+    # =====================================================
+    # INSIGHT 2
+    # =====================================================
+    st.markdown('<p class="section-header">2️⃣ Legacy Names & Administrative Renaming</p>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="cyan-box">
+    Several states and districts appeared simultaneously under historical and current official names
+    (e.g., <strong>Orissa → Odisha</strong>, <strong>Pondicherry → Puducherry</strong>,
+    <strong>Dadra & Nagar Haveli + Daman & Diu</strong>).
+    </div>
+    """, unsafe_allow_html=True)
+
+    with st.expander("📊 Impact on analysis", expanded=False):
+        st.markdown("""
+        - ⚠️ **Problem**: Parallel labels artificially split enrolment counts  
+        - 🔧 **Consolidation**: Enabled policy-aligned state and district comparisons  
+        - ✨ **Precision**: Cleaning was selective and did not collapse valid districts
+        - 📈 **Result**: More accurate trend analysis and geographic insights
+        """)
+
+    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
+
+    # =====================================================
+    # INSIGHT 3
+    # =====================================================
+    st.markdown('<p class="section-header">3️⃣ Uneven Reporting Coverage Across Time</p>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="warning-box">
+    ⚡ National enrolment totals are highly sensitive to <strong>which districts report on a given day</strong>.
+    Sharp fluctuations frequently coincide with changes in reporting coverage rather than true demand.
+    </div>
+    """, unsafe_allow_html=True)
+
+    with st.expander("💡 Analytical implication", expanded=False):
+        st.markdown("""
+        - 🚫 **Issue**: Raw daily totals are misleading  
+        - ✅ **Solution**: Coverage-aware metrics (average per reported day) are required  
+        - 🔗 **Best Practice**: Enrolment trends must be interpreted jointly with reporting coverage
+        - 📊 **Insight**: Normalized metrics reveal true operational intensity
+        """)
+
+    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
+
+    # =====================================================
+    # INSIGHT 4
+    # =====================================================
+    st.markdown('<p class="section-header">4️⃣ Month-Start Batch Upload Artifacts</p>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="metric-box">
+    Aadhaar enrolments show extreme concentration on the <span class="highlight-text">1st day of the month</span>,
+    with the largest spike on <strong>1st July</strong>.
+    This reflects <strong>centralized batch uploads</strong>, not operational surges.
+    </div>
+    """, unsafe_allow_html=True)
+
+    with st.expander("⏰ Why this matters", expanded=False):
+        st.markdown("""
+        - 📅 **Pattern**: Day-of-week and day-of-month peaks are administrative artifacts  
+        - 🚫 **Caution**: Early-period spikes should not be interpreted as behavioural signals  
+        - 📈 **Evolution**: Later months show transition to routine daily reporting
+        - 🎯 **Takeaway**: Temporal analysis requires artifact-aware filtering
+        """)
+
+    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
+
+    # =====================================================
+    # INSIGHT 5 (ENHANCED AGE INSIGHT)
+    # =====================================================
+    st.markdown('<p class="section-header">5️⃣ Aadhaar Enrolment Is Child-Driven</p>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="cyan-box">
+    👶 National Aadhaar enrolments are <strong>heavily concentrated in the 0–5 age group (≈65%)</strong>,
+    followed by 5–17 years.
+    Adult (18+) enrolments contribute <span class="highlight-text">only ~3%</span>,
+    indicating a mature adult Aadhaar base.
+    </div>
+    """, unsafe_allow_html=True)
+
+    with st.expander("🎯 Policy interpretation", expanded=False):
+        st.markdown("""
+        - 👶 **Primary Function**: Aadhaar functions primarily as an early-life identity system  
+        - 📊 **Demand Driver**: Current enrolment demand is driven by births and child inclusion  
+        - 👨‍👩‍👧‍👦 **Adult Patterns**: Adult enrolments are residual or corrective in nature
+        - 🏛️ **Policy Implication**: Resources should prioritize child enrolment infrastructure
+        """)
+
+    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
+
+    # =====================================================
+    # INSIGHT 6
+    # =====================================================
+    st.markdown('<p class="section-header">6️⃣ Coverage-Aware Inter-State Differences</p>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="metric-box">
+    After adjusting for reporting coverage, <strong>Uttar Pradesh</strong> emerges as a clear outlier,
+    followed by Bihar and Madhya Pradesh, reflecting sustained enrolment throughput
+    rather than reporting frequency.
+    </div>
+    """, unsafe_allow_html=True)
+
+    with st.expander("🗺️ Key takeaway", expanded=False):
+        st.markdown("""
+        - 📍 **Persistence**: Differences persist after controlling for missing days  
+        - 🌏 **Regional Pattern**: Northern and central states show structurally higher enrolment intensity  
+        - 🎯 **Saturation**: Southern and northeastern states reflect enrolment saturation
+        - 📈 **Policy Focus**: High-intensity states may need additional infrastructure support
+        """)
+
+    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
+
+    # =====================================================
+    # INSIGHT 7
+    # =====================================================
+    st.markdown('<p class="section-header">7️⃣ District-Level Metrics Require Coverage Thresholds</p>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="warning-box">
+    ⚠️ Districts with low reporting days consistently show near-zero averages,
+    indicating <strong>coverage artifacts rather than low enrolment demand</strong>.
+    </div>
+    """, unsafe_allow_html=True)
+
+    with st.expander("✅ Best practice applied", expanded=False):
+        st.markdown("""
+        - 🎯 **Filtering**: District analysis restricted to minimum reporting thresholds  
+        - 📊 **Quality**: High-coverage districts show stable and interpretable averages  
+        - 🚫 **Prevention**: Prevents misleading low-activity classifications
+        - 📈 **Standard**: Recommended minimum: 30+ reporting days for district-level analysis
+        """)
+
+    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
+
+    # =====================================================
+    # ENHANCED CONCLUSION
+    # =====================================================
+    st.markdown("## 🎯 Conclusion")
+
+    st.markdown("""
+    <div class="conclusion-box">
+    <h3 style="color: #80deea; margin-top: 0;">Transforming Noise into Intelligence</h3>
+    This analysis demonstrates how <strong>coverage-aware metrics</strong> and <strong>rigorous geographic standardization</strong>
+    transform noisy administrative enrolment logs into <strong>policy-safe, auditable insights</strong>.
+    <br><br>
+    Observed patterns reflect <strong>genuine enrolment intensity</strong> rather than reporting artifacts,
+    enabling reliable decision support for large-scale identity systems.
+    <br><br>
+    <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; margin-top: 1.5rem;">
+    ✨ <strong>Key Achievement</strong>: Converting 19,000+ raw pincodes and 984 districts into 
+    772 validated entities with interpretable, coverage-adjusted metrics.
+    </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<hr class="cyan-divider">', unsafe_allow_html=True)
+
+    # =====================================================
+    # ENHANCED ACKNOWLEDGEMENT
+    # =====================================================
+    st.markdown("## 🙏 Acknowledgement")
+
+    st.markdown("""
+    <div class="ack-box">
+    <h3 style="color: #00838f; margin-top: 0;">📚 Data & Technology</h3>
+    
+    <div style="margin: 1.5rem 0;">
+        <strong style="color: #00695c;">Data Source:</strong> UIDAI Aadhaar Enrolment Dataset (Anonymized)<br>
+        <strong style="color: #00695c;">Purpose:</strong> Analytical & educational use<br>
+        <strong style="color: #00695c;">Coverage:</strong> Multi-year national enrolment records
+    </div>
+    
+    <div style="background: white; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+        <strong style="color: #00838f;">Built with:</strong><br>
+        <span style="color: #546e7a;">
+        🐍 Python • 🎨 Streamlit • 📊 Pandas • 📈 Plotly • 🗺️ GeoPandas
+        </span>
+    </div>
+    
+    <p style="color: #546e7a; font-size: 0.95rem; margin-top: 1.5rem; font-style: italic;">
+    Developed to support transparent, data-driven governance and policy analysis.
     </p>
+    
+    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+        <span style="color: #00838f; font-weight: 600;">
+        💡 Committed to data quality, analytical rigor, and policy impact.
+        </span>
+    </div>
+    </div>
     """, unsafe_allow_html=True)
 
 
