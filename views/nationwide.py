@@ -14,6 +14,7 @@ from utils.national_prompt import build_national_report_prompt
 from utils.pdf_report import create_pdf_report
 from datetime import datetime
 import os
+import pytz
 
 from pathlib import Path
 CHART_DIR = "reports/charts"
@@ -915,7 +916,9 @@ def page():
             # report_date=datetime.today().strftime("%d %B %Y")
         )
 
-        report_date = datetime.today().strftime("%d %B %Y")
+        ist = pytz.timezone("Asia/Kolkata")
+        report_date = datetime.now(ist).strftime("%d %B %Y")
+
 
         report_text = build_national_report_prompt(
             report_date=report_date,
