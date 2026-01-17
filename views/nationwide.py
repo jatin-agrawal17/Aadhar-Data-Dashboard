@@ -289,6 +289,11 @@ def page():
             template='plotly_white'
         )
         st.plotly_chart(fig_age, use_container_width=True)
+        st.markdown(
+    "**This pie chart presents the distribution of Aadhaar enrolments across age groups (0–5, 5–17, and 18+ years) using "
+    "reported records only, highlighting the relative contribution of each demographic segment to total enrolment volume.**"
+)
+
     
     with col2:
         st.markdown("### 📊 Breakdown")
@@ -335,6 +340,7 @@ def page():
             fill='tozeroy',
             fillcolor='rgba(8, 145, 178, 0.1)'
         ))
+
         fig_trend.add_trace(go.Scatter(
             x=national_daily['date'],
             y=national_daily['reporting_districts'],
@@ -358,6 +364,10 @@ def page():
             template='plotly_white'
         )
         st.plotly_chart(fig_trend, use_container_width=True)
+        st.markdown(
+    "**This time-series plot presents total Aadhaar enrolments at the national level alongside the number of reporting "
+    "districts for each reported day, enabling joint interpretation of enrolment volumes and reporting coverage over time.**"
+)
     
     with tab2:
         weekday_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -381,6 +391,10 @@ def page():
         fig_day.update_traces(textposition='outside')
         fig_day.update_layout(showlegend=False, height=450, template='plotly_white')
         st.plotly_chart(fig_day, use_container_width=True)
+        st.markdown(
+    "**This bar chart shows total Aadhaar enrolments aggregated by day of the week, based on reported records only, "
+    "allowing comparison of cumulative enrolment volumes across weekdays and weekends.**"
+)
     
     with tab3:
         dom = (
@@ -401,6 +415,10 @@ def page():
         )
         fig_dom.update_layout(showlegend=False, height=450, template='plotly_white')
         st.plotly_chart(fig_dom, use_container_width=True)
+        st.markdown(
+    "**The extreme concentration of enrolments on the 1st day of the month confirms systematic month-start batch reporting, "
+    "indicating that day-of-month peaks reflect reporting behavior rather than real enrolment patterns.**"
+)
     
     with tab4:
         df['month'] = df['date'].dt.month
@@ -532,6 +550,11 @@ def page():
     fig_top15.update_coloraxes(showscale=False)
     
     st.plotly_chart(fig_top15, use_container_width=True)
+    st.markdown(
+    "**This bar chart ranks states by average Aadhaar enrolments per reported day, restricted to states with ≥70% national "
+    "reporting coverage, ensuring comparability by adjusting for missing or inconsistent reporting days rather than "
+    "relying on raw totals.**"
+)
     
     # Validation table
     # st.markdown('<h4 style="color: #0891b2; margin-top: 1.5rem;">📋 Top 15 States - Detailed Statistics</h4>', unsafe_allow_html=True)
@@ -611,6 +634,11 @@ def page():
     )
     
     st.plotly_chart(fig_age_state, use_container_width=True)
+    st.markdown(
+    "**This stacked bar chart shows the age-wise composition of enrolments (0–5, 5–17, 18+ years) for the top 15 states "
+    "ranked by average enrolments per reported day, illustrating how enrolment activity is distributed across age groups "
+    "within each state.**"
+)
     
     # ============================= 
     # GEOGRAPHIC MAPS
@@ -663,6 +691,7 @@ def page():
         )
         ax.axis("off")
         st.pyplot(fig)
+
     
     with map_tab2:
         fig2, ax2 = plt.subplots(1, 1, figsize=(14, 16))
@@ -712,6 +741,10 @@ def page():
             )
         
         st.pyplot(fig2)
+        st.markdown(
+    "**This choropleth map visualizes state-wise average Aadhaar enrolments per reported day using a coverage-aware metric, "
+    "ensuring that differences reflect enrolment intensity on reporting days rather than variations in reporting frequency.**"
+)
     
     # Top performing states table
     st.markdown('<h4 style="color: #0891b2; margin-top: 1.5rem;">🏆 Top 10 Performing States (Overall)</h4>', unsafe_allow_html=True)
