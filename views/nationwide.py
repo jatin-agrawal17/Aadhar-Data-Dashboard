@@ -912,7 +912,7 @@ def page():
             age_data=age_data,
             top15_states=top15_states,
             output_dir=CHART_DIR,
-            report_date=datetime.today().strftime("%d %B %Y")
+            # report_date=datetime.today().strftime("%d %B %Y")
         )
 
         report_date = datetime.today().strftime("%d %B %Y")
